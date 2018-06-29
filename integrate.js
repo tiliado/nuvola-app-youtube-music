@@ -58,25 +58,129 @@
 
   // Extract data from the web page
   WebApp.update = function () {
-    var track = {
-      title: null,
-      artist: null,
-      album: null,
-      artLocation: null,
-      rating: null
+    var elms = this._getElements()
+    if (elms.skipAd) {
+      if (elms.skipAd.parentNode.style.display !== 'none') {
+        Nuvola.clickOnElement(elms.skipAd)
+      }
+    } else {
+      var track = {
+        title: Nuvola.queryText('.middle-controls .title'),
+        artist: Nuvola.queryText('.middle-controls .byline'),
+        album: null,
+        artLocation: Nuvola.queryAttribute('.middle-controls img', 'src'),
+        rating: null
+      }
+
+      var timeInfo = this._getTimeInfo()
+      if (timeInfo) {
+        track.length = timeInfo[1]
+        player.setTrackPosition(timeInfo[0])
+      }
+      player.setTrack(track)
     }
 
-    player.setTrack(track)
-    player.setPlaybackState(PlaybackState.UNKNOWN)
+    var state
+    if (elms.pause) {
+      state = PlaybackState.PLAYING
+    } else if (elms.play) {
+      state = PlaybackState.PAUSED
+    } else {
+      state = PlaybackState.UNKNOWN
+    }
+    player.setPlaybackState(state)
+    player.setCanGoPrev(!!elms.prev)
+    player.setCanGoNext(!!elms.next)
+    player.setCanPlay(!!elms.play)
+    player.setCanPause(!!elms.pause)
+    player.setCanSeek(state !== PlaybackState.UNKNOWN && elms.progressbar)
+    player.updateVolume(Nuvola.queryAttribute('#volume-slider', 'value', (volume) => volume / 100))
+    player.setCanChangeVolume(!!elms.volumebar)
 
     // Schedule the next update
     setTimeout(this.update.bind(this), 500)
   }
 
+  WebApp._getElements = function () {
+    // Interesting elements
+    var elms = {
+      play: document.querySelector('#left-controls .play-pause-button'),
+      pause: null,
+      next: document.querySelector('#left-controls .next-button'),
+      prev: document.querySelector('#left-controls .previous-button'),
+      progressbar: document.querySelector('#progress-bar #sliderBar'),
+      volumebar: document.querySelector('#volume-slider #sliderBar'),
+      expandingMenu: document.querySelector('#right-controls #expanding-menu'),
+      skipAd: document.querySelector('button.videoAdUiSkipButton')
+    }
+
+    // Ignore disabled buttons
+    for (var key in elms) {
+      if (elms[key] && elms[key].disabled) {
+        elms[key] = null
+      }
+    }
+
+    // Distinguish between play and pause action
+    if (elms.play && elms.play.getAttribute('title') === 'Pause') {
+      elms.pause = elms.play
+      elms.play = null
+    }
+    return elms
+  }
+
+  WebApp._getTimeInfo = function () {
+    var time = Nuvola.queryText('#left-controls .time-info')
+    if (time && time.includes('/')) {
+      time = time.split('/')
+      return [time[0].trim(), time[1].trim()]
+    }
+    return null
+  }
+
   // Handler of playback actions
   WebApp._onActionActivated = function (emitter, name, param) {
+    var elms = this._getElements()
     switch (name) {
-      case PlayerAction.Play:
+      case PlayerAction.TOGGLE_PLAY:
+        if (elms.play) {
+          Nuvola.clickOnElement(elms.play)
+        } else {
+          Nuvola.clickOnElement(elms.pause)
+        }
+        break
+      case PlayerAction.PLAY:
+        Nuvola.clickOnElement(elms.play)
+        break
+      case PlayerAction.PAUSE:
+      case PlayerAction.STOP:
+        Nuvola.clickOnElement(elms.pause)
+        break
+      case PlayerAction.PREV_SONG:
+        Nuvola.clickOnElement(elms.prev)
+        break
+      case PlayerAction.NEXT_SONG:
+        Nuvola.clickOnElement(elms.next)
+        break
+      case PlayerAction.SEEK:
+        var timeInfo = this._getTimeInfo()
+        if (timeInfo) {
+          var total = Nuvola.parseTimeUsec(timeInfo[1])
+          if (param >= 0 && param <= total) {
+            Nuvola.clickOnElement(elms.progressbar, param / total, 0.5)
+          }
+        }
+        break
+      case PlayerAction.CHANGE_VOLUME:
+        if (elms.expandingMenu) {
+          elms.expandingMenu.style.display = 'block'
+          elms.expandingMenu.style.opacity = 1
+          Nuvola.clickOnElement(document.querySelector('#expand-volume-slider #sliderBar'), param, 0.5)
+          elms.expandingMenu.style.display = 'none'
+          elms.expandingMenu.style.opacity = 0
+        } else {
+          Nuvola.clickOnElement(elms.volumebar, param, 0.5)
+        }
         break
     }
   }

@@ -2,6 +2,7 @@
   "id": "youtube_music",
   "name": "YouTube Music",
   "home_url": "https://music.youtube.com/",
+  "allowed_uri": "https?://music.youtube.com/",
   "maintainer_name": "Jiří Janoušek",
   "maintainer_link": "https://github.com/fenryxo",
   "version_major": 1,
