@@ -1,0 +1,13 @@
+Makefile
+metadata.json
+icons
+/screenshots/
+nuvola-app-youtube-music
+eu.tiliado.NuvolaAppYoutubeMusic.desktop
+eu.tiliado.NuvolaAppYoutubeMusic.service
+eu.tiliado.NuvolaAppYoutubeMusic.appdata.xml
+nuvola-app-youtube-music.metainfo.xml
+eu.tiliado.WebRuntimeAppYoutubeMusic.desktop
+eu.tiliado.WebRuntimeAppYoutubeMusic.service
+eu.tiliado.WebRuntimeAppYoutubeMusic.appdata.xml
+nuvola-app-youtube-music.metainfo.xml
