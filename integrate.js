@@ -25,19 +25,32 @@
 'use strict';
 
 (function (Nuvola) {
-  // Create media player component
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
-
-  // Handy aliases
   var PlaybackState = Nuvola.PlaybackState
   var PlayerAction = Nuvola.PlayerAction
+  var _ = Nuvola.Translate.gettext
+  var C_ = Nuvola.Translate.pgettext
+  var THUMB_NEVER_TOGGLES = 'app.thumb_never_toggles'
+  var ACTION_THUMBS_UP = 'thumbs-up'
+  var ACTION_THUMBS_DOWN = 'thumbs-down'
+  var THUMBS_ACTIONS = [ACTION_THUMBS_UP, ACTION_THUMBS_DOWN]
 
-  // Create new WebApp prototype
+  var player = Nuvola.$object(Nuvola.MediaPlayer)
   var WebApp = Nuvola.$WebApp()
 
-  // Initialization routines
+  WebApp._onInitAppRunner = function (emitter) {
+    Nuvola.WebApp._onInitAppRunner.call(this, emitter)
+    Nuvola.config.setDefaultAsync(THUMB_NEVER_TOGGLES, false).catch(Nuvola.logException)
+    Nuvola.core.connect('PreferencesForm', this)
+    Nuvola.actions.addAction('playback', 'win', ACTION_THUMBS_UP, C_('Action', 'Thumbs up'), null, null, null, true)
+    Nuvola.actions.addAction('playback', 'win', ACTION_THUMBS_DOWN, C_('Action', 'Thumbs down'), null, null, null, true)
+  }
+
   WebApp._onInitWebWorker = function (emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter)
+    this.thumbsUp = undefined
+    this.thumbsDown = undefined
+    this.state = PlaybackState.UNKNOWN
+    player.addExtraActions(THUMBS_ACTIONS)
 
     var state = document.readyState
     if (state === 'interactive' || state === 'complete') {
@@ -49,11 +62,13 @@
 
   // Page is ready for magic
   WebApp._onPageReady = function () {
-    // Connect handler for signal ActionActivated
     Nuvola.actions.connect('ActionActivated', this)
-
-    // Start update routine
-    this.update()
+    player.connect('RatingSet', this)
+    Nuvola.config.connect('ConfigChanged', this)
+    Nuvola.config.getAsync(THUMB_NEVER_TOGGLES).then((thumbNeverToggles) => {
+      this.thumbNeverToggles = thumbNeverToggles
+      this.update()
+    }).catch(Nuvola.logException)
   }
 
   // Extract data from the web page
@@ -77,6 +92,13 @@
         track.length = timeInfo[1]
         player.setTrackPosition(timeInfo[0])
       }
+      if (this._isButtonPressed(elms.like)) {
+        track.rating = 1.0
+      } else if (this._isButtonPressed(elms.dislike)) {
+        track.rating = 0.20
+      } else {
+        track.rating = 0.0
+      }
       player.setTrack(track)
     }
 
@@ -96,6 +118,16 @@
     player.setCanSeek(state !== PlaybackState.UNKNOWN && elms.progressbar)
     player.updateVolume(Nuvola.queryAttribute('#volume-slider', 'value', (volume) => volume / 100))
     player.setCanChangeVolume(!!elms.volumebar)
+    player.setCanRate(!!elms.like || !elms.dislike)
+
+    Nuvola.actions.updateStates({
+      [ACTION_THUMBS_UP]: this._isButtonPressed(elms.like),
+      [ACTION_THUMBS_DOWN]: this._isButtonPressed(elms.dislike)
+    })
+    Nuvola.actions.updateEnabledFlags({
+      [ACTION_THUMBS_UP]: !!elms.like && !(this.thumbNeverToggles && this._isButtonPressed(elms.like)),
+      [ACTION_THUMBS_DOWN]: !!elms.dislike && !(this.thumbNeverToggles && this._isButtonPressed(elms.dislike))
+    })
 
     // Schedule the next update
     setTimeout(this.update.bind(this), 500)
@@ -111,7 +143,9 @@
       progressbar: document.querySelector('#progress-bar #sliderBar'),
       volumebar: document.querySelector('#volume-slider #sliderBar'),
       expandingMenu: document.querySelector('#right-controls #expanding-menu'),
-      skipAd: document.querySelector('button.videoAdUiSkipButton')
+      skipAd: document.querySelector('button.videoAdUiSkipButton'),
+      like: document.querySelector('.middle-controls-buttons .like'),
+      dislike: document.querySelector('.middle-controls-buttons .dislike')
     }
 
     // Ignore disabled buttons
@@ -136,6 +170,10 @@
       return [time[0].trim(), time[1].trim()]
     }
     return null
+  }
+
+  WebApp._isButtonPressed = function (button) {
+    return button && button.getAttribute('aria-pressed') === 'true'
   }
 
   // Handler of playback actions
@@ -182,7 +220,56 @@
           Nuvola.clickOnElement(elms.volumebar, param, 0.5)
         }
         break
+      /* Custom actions */
+      case ACTION_THUMBS_UP:
+        Nuvola.clickOnElement(elms.like)
+        break
+      case ACTION_THUMBS_DOWN:
+        Nuvola.clickOnElement(elms.dislike)
+        break
     }
+  }
+
+  // Handler for rating
+  WebApp._onRatingSet = function (emitter, rating) {
+    Nuvola.log('Rating set: {1}', rating)
+    var elms = this._getElements()
+    if (rating < 0.01) { // Unset rating
+      if (this._isButtonPressed(elms.like)) {
+        Nuvola.clickOnElement(elms.like)
+      } else if (this._isButtonPressed(elms.dislike)) {
+        Nuvola.clickOnElement(elms.dislike)
+      }
+    } else if (rating <= 0.41) { // 0-2 stars
+      if (!this._isButtonPressed(elms.dislike)) {
+        Nuvola.clickOnElement(elms.dislike)
+      }
+    } else if (rating >= 0.79) { // 4-5 stars
+      if (!this._isButtonPressed(elms.like)) {
+        Nuvola.clickOnElement(elms.like)
+      }
+    } else { // three stars
+      window.alert('Invalid rating: ' + rating + '.' +
+        "Have you clicked the three-star button? It isn't supported.")
+    }
+  }
+
+  WebApp._onConfigChanged = function (emitter, key) {
+    if (key === THUMB_NEVER_TOGGLES) {
+      Nuvola.config.getAsync(THUMB_NEVER_TOGGLES).then((thumbNeverToggles) => {
+        this.thumbNeverToggles = thumbNeverToggles
+      }).catch(Nuvola.logException)
+    }
+  }
+
+  WebApp._onPreferencesForm = function (emitter, values, entries) {
+    this.appendPreferences(values, entries)
+  }
+
+  WebApp.appendPreferences = function (values, entries) {
+    values[THUMB_NEVER_TOGGLES] = Nuvola.config.get(THUMB_NEVER_TOGGLES)
+    entries.push(['header', '\nYouTube Music'])
+    entries.push(['bool', THUMB_NEVER_TOGGLES, _('Treat thumbs up or down selection as a one-way switch,\nnot a toggle.')])
   }
 
   WebApp.start()
