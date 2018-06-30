@@ -66,7 +66,7 @@
     } else {
       var track = {
         title: Nuvola.queryText('.middle-controls .title'),
-        artist: Nuvola.queryText('.middle-controls .byline'),
+        artist: Nuvola.queryText('.middle-controls .byline', value => value.split('•')[0]),
         album: null,
         artLocation: Nuvola.queryAttribute('.middle-controls img', 'src'),
         rating: null
