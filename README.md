@@ -1,4 +1,4 @@
-YouTube Music • Nuvola Apps Runtime
+YouTube Music • Nuvola Apps Runtime [![CircleCI](https://circleci.com/gh/tiliado/nuvola-app-youtube-music/tree/master.svg?style=svg)](https://circleci.com/gh/tiliado/nuvola-app-youtube-music/tree/master)
 =================================
 
 Integration of YouTube Music into your linux desktop via
