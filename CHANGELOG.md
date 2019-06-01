@@ -1,6 +1,8 @@
 YouTube Music Change Log
 ======================
 
+  * Don't depend on the button title to distinguish playing and paused states. Issue: tiliado/nuvolaruntime#526
+
 1.3 - October 14th, 2018
 ------------------------
 
