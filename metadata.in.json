@@ -12,6 +12,7 @@
   "categories": "AudioVideo;Audio;",
   "dark_theme": true,
   "requirements": "Chromium[65] Codec[MP3] Feature[MSE]",
+  "user_agent": "SAFARI",
   "license": "BSD-2-Clause; CC-BY-SA-3.0",
   "build": {
     "icons": [
