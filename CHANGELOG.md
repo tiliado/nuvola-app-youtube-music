@@ -3,6 +3,8 @@ YouTube Music Change Log
 
   * Don't depend on the button title to distinguish playing and paused states. Issue: tiliado/nuvolaruntime#526
   * Mask as Safari to work around Google sign-in issues. Issue: tiliado/nuvolaruntime#575
+  * Remove broken code to skip ads. Purchasing YouTube Music Premium is better option.
+  * Skip metadata parsing when ad is playing.
 
 1.3 - October 14th, 2018
 ------------------------

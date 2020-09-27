@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Jiří Janoušek <janousek.jiri@gmail.com>
+ * Copyright 2018-2020 Jiří Janoušek <janousek.jiri@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -74,15 +74,19 @@
   // Extract data from the web page
   WebApp.update = function () {
     var elms = this._getElements()
-    if (elms.skipAd) {
-      if (elms.skipAd.parentNode.style.display !== 'none') {
-        Nuvola.clickOnElement(elms.skipAd)
-      }
-    } else {
+    if (this.isAdPlaying()) {
       var track = {
-        title: Nuvola.queryText('.middle-controls .title'),
-        artist: Nuvola.queryText('.middle-controls .byline', value => value.split('•')[0]),
+        artist: null,
         album: null,
+        artLocation: null,
+        rating: null,
+        length: null
+      }
+      player.setTrack(track)
+    } else {
+      track = {
+        title: Nuvola.queryText('.middle-controls .title'),
+        artist: Nuvola.queryText('.middle-controls .byline', value => value.split('•')[0].trim() || null),
         artLocation: Nuvola.queryAttribute('.middle-controls img', 'src'),
         rating: null
       }
@@ -143,7 +147,6 @@
       progressbar: document.querySelector('#progress-bar #sliderBar'),
       volumebar: document.querySelector('#volume-slider #sliderBar'),
       expandingMenu: document.querySelector('#right-controls #expanding-menu'),
-      skipAd: document.querySelector('button.videoAdUiSkipButton'),
       like: document.querySelector('.middle-controls-buttons .like'),
       dislike: document.querySelector('.middle-controls-buttons .dislike')
     }
@@ -270,6 +273,11 @@
     values[THUMB_NEVER_TOGGLES] = Nuvola.config.get(THUMB_NEVER_TOGGLES)
     entries.push(['header', '\nYouTube Music'])
     entries.push(['bool', THUMB_NEVER_TOGGLES, _('Treat thumbs up or down selection as a one-way switch,\nnot a toggle.')])
+  }
+
+  WebApp.isAdPlaying = function () {
+    var elm = document.querySelector('.middle-controls .advertisement')
+    return !!(elm && !elm.hidden)
   }
 
   WebApp.start()
