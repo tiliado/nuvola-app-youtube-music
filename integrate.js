@@ -25,17 +25,17 @@
 'use strict';
 
 (function (Nuvola) {
-  var PlaybackState = Nuvola.PlaybackState
-  var PlayerAction = Nuvola.PlayerAction
-  var _ = Nuvola.Translate.gettext
-  var C_ = Nuvola.Translate.pgettext
-  var THUMB_NEVER_TOGGLES = 'app.thumb_never_toggles'
-  var ACTION_THUMBS_UP = 'thumbs-up'
-  var ACTION_THUMBS_DOWN = 'thumbs-down'
-  var THUMBS_ACTIONS = [ACTION_THUMBS_UP, ACTION_THUMBS_DOWN]
+  const PlaybackState = Nuvola.PlaybackState
+  const PlayerAction = Nuvola.PlayerAction
+  const _ = Nuvola.Translate.gettext
+  const C_ = Nuvola.Translate.pgettext
+  const THUMB_NEVER_TOGGLES = 'app.thumb_never_toggles'
+  const ACTION_THUMBS_UP = 'thumbs-up'
+  const ACTION_THUMBS_DOWN = 'thumbs-down'
+  const THUMBS_ACTIONS = [ACTION_THUMBS_UP, ACTION_THUMBS_DOWN]
 
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
-  var WebApp = Nuvola.$WebApp()
+  const player = Nuvola.$object(Nuvola.MediaPlayer)
+  const WebApp = Nuvola.$WebApp()
 
   WebApp._onInitAppRunner = function (emitter) {
     Nuvola.WebApp._onInitAppRunner.call(this, emitter)
@@ -52,7 +52,7 @@
     this.state = PlaybackState.UNKNOWN
     player.addExtraActions(THUMBS_ACTIONS)
 
-    var state = document.readyState
+    const state = document.readyState
     if (state === 'interactive' || state === 'complete') {
       this._onPageReady()
     } else {
@@ -73,15 +73,16 @@
 
   // Extract data from the web page
   WebApp.update = function () {
-    var elms = this._getElements()
+    const elms = this._getElements()
+    let track = {
+      artist: null,
+      album: null,
+      artLocation: null,
+      rating: null,
+      length: null
+    }
+
     if (this.isAdPlaying()) {
-      var track = {
-        artist: null,
-        album: null,
-        artLocation: null,
-        rating: null,
-        length: null
-      }
       player.setTrack(track)
     } else {
       track = {
@@ -91,7 +92,7 @@
         rating: null
       }
 
-      var timeInfo = this._getTimeInfo()
+      const timeInfo = this._getTimeInfo()
       if (timeInfo) {
         track.length = timeInfo[1]
         player.setTrackPosition(timeInfo[0])
@@ -106,7 +107,7 @@
       player.setTrack(track)
     }
 
-    var state
+    let state
     if (elms.pause) {
       state = PlaybackState.PLAYING
     } else if (elms.play) {
@@ -139,7 +140,7 @@
 
   WebApp._getElements = function () {
     // Interesting elements
-    var elms = {
+    const elms = {
       play: document.querySelector('#left-controls .play-pause-button'),
       pause: null,
       next: document.querySelector('#left-controls .next-button'),
@@ -152,7 +153,7 @@
     }
 
     // Ignore disabled buttons
-    for (var key in elms) {
+    for (const key in elms) {
       if (elms[key] && elms[key].disabled) {
         elms[key] = null
       }
@@ -167,7 +168,7 @@
   }
 
   WebApp._getTimeInfo = function () {
-    var time = Nuvola.queryText('#left-controls .time-info')
+    let time = Nuvola.queryText('#left-controls .time-info')
     if (time && time.includes('/')) {
       time = time.split('/')
       return [time[0].trim(), time[1].trim()]
@@ -181,7 +182,7 @@
 
   // Handler of playback actions
   WebApp._onActionActivated = function (emitter, name, param) {
-    var elms = this._getElements()
+    const elms = this._getElements()
     switch (name) {
       case PlayerAction.TOGGLE_PLAY:
         if (elms.play) {
@@ -203,15 +204,16 @@
       case PlayerAction.NEXT_SONG:
         Nuvola.clickOnElement(elms.next)
         break
-      case PlayerAction.SEEK:
-        var timeInfo = this._getTimeInfo()
+      case PlayerAction.SEEK: {
+        const timeInfo = this._getTimeInfo()
         if (timeInfo) {
-          var total = Nuvola.parseTimeUsec(timeInfo[1])
+          const total = Nuvola.parseTimeUsec(timeInfo[1])
           if (param >= 0 && param <= total) {
             Nuvola.clickOnElement(elms.progressbar, param / total, 0.5)
           }
         }
         break
+      }
       case PlayerAction.CHANGE_VOLUME:
         if (elms.expandingMenu) {
           elms.expandingMenu.style.display = 'block'
@@ -236,7 +238,7 @@
   // Handler for rating
   WebApp._onRatingSet = function (emitter, rating) {
     Nuvola.log('Rating set: {1}', rating)
-    var elms = this._getElements()
+    const elms = this._getElements()
     if (rating < 0.01) { // Unset rating
       if (this._isButtonPressed(elms.like)) {
         Nuvola.clickOnElement(elms.like)
@@ -276,7 +278,7 @@
   }
 
   WebApp.isAdPlaying = function () {
-    var elm = document.querySelector('.middle-controls .advertisement')
+    const elm = document.querySelector('.middle-controls .advertisement')
     return !!(elm && !elm.hidden)
   }
 
