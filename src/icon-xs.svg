@@ -45,17 +45,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.593556"
-     inkscape:cx="14.036679"
-     inkscape:cy="20.20309"
+     inkscape:zoom="8.1978821"
+     inkscape:cx="16.832617"
+     inkscape:cy="42.317489"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="true"
-     inkscape:window-width="2560"
+     inkscape:window-width="1280"
      inkscape:window-height="1376"
-     inkscape:window-x="0"
+     inkscape:window-x="1280"
      inkscape:window-y="27"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:document-rotation="0">
@@ -71,7 +71,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -81,7 +81,7 @@
      id="layer1"
      transform="translate(0,-1004.3622)">
     <g
-       transform="matrix(11.52364,0,0,11.52364,-3947.5338,-5762.4485)"
+       transform="matrix(11.52364,0,0,11.52364,-3947.3686,-5762.1986)"
        id="layer1-8"
        inkscape:label="Layer 1">
       <g
@@ -113,23 +113,48 @@
        d=""
        id="path3145"
        inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="white">
+    <g
+       id="XMLID_167_-3"
+       transform="matrix(0.25394856,0,0,0.25394856,1.8177263,1.9365665)"
+       style="fill:#ffffff">
+      <circle
+         id="XMLID_791_-6"
+         fill="#000000"
+         cx="88"
+         cy="88"
+         r="88"
+         style="fill:#ffffff" />
+      <polygon
+         id="XMLID_274_-7"
+         fill="#ffffff"
+         points="111,87 72,65 72,111 "
+         transform="matrix(2.3659333,0,0,2.3659333,-120.956,-119.423)"
+         style="fill:#ffffff" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="logo">
     <g
        id="XMLID_167_"
-       transform="matrix(0.25301546,0,0,0.25301546,1.7346391,1006.131)">
+       transform="matrix(0.24403339,0,0,0.24403339,2.6902613,2.8091015)">
       <circle
          id="XMLID_791_"
          fill="#000000"
          cx="88"
          cy="88"
          r="88" />
-      <path
-         id="XMLID_42_"
-         fill="#ffffff"
-         d="m 88,46 c 23.1,0 42,18.8 42,42 0,23.2 -18.8,42 -42,42 C 64.8,130 46,111.2 46,88 46,64.8 64.9,46 88,46 m 0,-4 c -25.4,0 -46,20.6 -46,46 0,25.4 20.6,46 46,46 25.4,0 46,-20.6 46,-46 0,-25.4 -20.6,-46 -46,-46 z" />
       <polygon
          id="XMLID_274_"
          fill="#ffffff"
-         points="72,65 72,111 111,87 " />
+         points="72,65 72,111 111,87 "
+         transform="matrix(2.3659333,0,0,2.3659333,-120.956,-119.423)" />
     </g>
   </g>
 </svg>

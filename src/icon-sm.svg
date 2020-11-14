@@ -46,16 +46,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.593556"
-     inkscape:cx="14.036679"
+     inkscape:cx="22.209481"
      inkscape:cy="20.20309"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="true"
-     inkscape:window-width="2560"
+     inkscape:window-width="1280"
      inkscape:window-height="1376"
-     inkscape:window-x="0"
+     inkscape:window-x="1280"
      inkscape:window-y="27"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:document-rotation="0">
@@ -71,7 +71,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -122,14 +122,21 @@
          cx="88"
          cy="88"
          r="88" />
-      <path
-         id="XMLID_42_"
-         fill="#ffffff"
-         d="m 88,46 c 23.1,0 42,18.8 42,42 0,23.2 -18.8,42 -42,42 C 64.8,130 46,111.2 46,88 46,64.8 64.9,46 88,46 m 0,-4 c -25.4,0 -46,20.6 -46,46 0,25.4 20.6,46 46,46 25.4,0 46,-20.6 46,-46 0,-25.4 -20.6,-46 -46,-46 z" />
-      <polygon
-         id="XMLID_274_"
-         fill="#ffffff"
-         points="72,111 111,87 72,65 " />
     </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="logo">
+    <path
+       id="XMLID_42_"
+       fill="#ffffff"
+       d="m 23.999999,9.8526045 c 7.799835,0 14.181518,6.3479175 14.181518,14.1815185 0,7.833601 -6.347917,14.181518 -14.181518,14.181518 -7.833601,0 -14.1815188,-6.347917 -14.1815188,-14.181518 0,-7.833601 6.3816828,-14.1815185 14.1815188,-14.1815185 m 0,-1.3506203 c -8.576442,0 -15.5321392,6.9556968 -15.5321392,15.5321388 0,8.576441 6.9556972,15.53214 15.5321392,15.53214 8.576443,0 15.53214,-6.955699 15.53214,-15.53214 0,-8.576442 -6.955697,-15.5321388 -15.53214,-15.5321388 z"
+       style="stroke-width:0.337655" />
+    <polygon
+       id="XMLID_274_"
+       fill="#ffffff"
+       points="72,65 72,111 111,87 "
+       transform="matrix(0.33765521,0,0,0.33765521,-6.8954522,-5.6795346)" />
   </g>
 </svg>
