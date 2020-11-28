@@ -1,6 +1,9 @@
 YouTube Music Change Log
 ======================
 
+1.5 - November 28th, 2020
+-------------------------
+
   * New icons created by Doug Hitchcock.
 
 1.4 - September 28, 2020
