@@ -160,7 +160,7 @@
     }
 
     // Distinguish between play (M8) and pause (M6) actions
-    if (elms.play && elms.play.querySelector('iron-icon svg g path[d~="M6"]')) {
+    if (elms.play && elms.play.querySelector('tp-yt-iron-icon svg g path[d~="M6"]')) {
       elms.pause = elms.play
       elms.play = null
     }
