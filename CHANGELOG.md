@@ -1,6 +1,9 @@
 YouTube Music Change Log
 ======================
 
+1.6 - July 31st, 2021
+---------------------
+
   * Fix playback state parsing. Issue: tiliado/nuvolaplayer#750
 
 1.5 - November 28th, 2020
