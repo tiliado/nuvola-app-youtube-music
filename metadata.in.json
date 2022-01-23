@@ -1,6 +1,7 @@
 {
   "id": "youtube_music",
   "name": "YouTube Music",
+  "deprecation_url": "https://github.com/tiliado/nuvolaplayer/issues/783",
   "home_url": "https://music.youtube.com/",
   "allowed_uri": "https?://(music|www|accounts)\\.youtube\\.com/",
   "maintainer_name": "Jiří Janoušek",
